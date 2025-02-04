@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace JuegosCartas
 {
@@ -18,18 +20,39 @@ namespace JuegosCartas
     /// </summary>
     public partial class MainWindow : Window
     {
+        private TextBlock firstClicked = null;
+        private TextBlock secondClicked = null;
+        private DispatcherTimer timer = new DispatcherTimer();
+        
         Random random = new Random();
         private List<string> icons = new List<string>()
         {
             "!", "!", "N", "N", ",", ",", "k", "k",
             "b", "b", "v", "v", "w", "w", "z", "z"
         };
-        private TextBlock firstClicked = null;
-        private TextBlock secondClicked = null;
+        
         public MainWindow()
         {
             InitializeComponent();
-            AssignIconsToSquares();
+            timer.Interval = System.TimeSpan.FromMilliseconds(200);
+            timer.Tick += timer_Tick;
+            
+            AssignIconsToSquares(); 
+            //timer.Start();
+        }
+        private void timer_Tick(object sender, EventArgs e)
+        {
+         
+            timer.Stop();
+            
+            if (firstClicked != null && secondClicked != null)
+            {
+                firstClicked.Foreground = firstClicked.Background;
+                secondClicked.Foreground = secondClicked.Background;
+                firstClicked = null;
+                secondClicked = null;
+            }
+
         }
 
         private void AssignIconsToSquares()
@@ -45,41 +68,38 @@ namespace JuegosCartas
                 {
                     int randomNumber = random.Next(icons.Count);
                     iconTextBlock.Text = icons[randomNumber];
-                    iconTextBlock.Foreground = iconTextBlock.Background;
+                  iconTextBlock.Foreground = iconTextBlock.Background;
                     icons.RemoveAt(randomNumber);
                 }
             }
         }
         private void Celda_Click(object sender, MouseButtonEventArgs e)
         {
-            TextBlock clickedLabel = sender as TextBlock;
+            
+            DockPanel clickedLabel = sender as DockPanel;
 
             if (clickedLabel != null)
             {
-                if (clickedLabel.Foreground.Equals(clickedLabel.Background))
+                TextBlock iconTextBlock = clickedLabel.Children[0] as TextBlock; ;
+
+                if(iconTextBlock != null)
                 {
+                  
                     if (firstClicked == null) //volterar y guardar
                     {
-                        firstClicked = clickedLabel;
+                        firstClicked = iconTextBlock;
                         //si esta volteada lo ponemos en negro
-                        firstClicked.Foreground = new SolidColorBrush(Colors.Black);
+                        firstClicked.Foreground = Brushes.Black;
                         return;
                     }
-                    if (secondClicked == null && clickedLabel != firstClicked) //volterar y comparar
+                    if (secondClicked == null && iconTextBlock != firstClicked) //y que no sea el primero
                     {
-                        secondClicked = clickedLabel;
-                        //si esta volteada lo pones en negro
-                        secondClicked.Foreground = new SolidColorBrush(Colors.Black);
-
-                        if (secondClicked == firstClicked)
-                        {
-
-
-                        }
+                        secondClicked = iconTextBlock;
+                        secondClicked.Foreground = Brushes.Black;
+                        timer.Start();
                     }
-
                 }
-
+               
             }
         }
     }
