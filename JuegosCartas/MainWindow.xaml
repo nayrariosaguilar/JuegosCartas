@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JuegosCartas"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" ScrollViewer.VerticalScrollBarVisibility="Disabled" ResizeMode="NoResize">
     <DockPanel Background="CornflowerBlue" x:Name="PantallaPrincipal">
         <Grid x:Name="LayoutPrincipal">
             <Grid.RowDefinitions>
@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="8*" />
                 <ColumnDefinition Width="8*" />
             </Grid.ColumnDefinitions>
-
+            <TextBlock Grid.Row="0"  Grid.Column="0" Text="Juego de las parejas" />
             <DockPanel Grid.Row="0" Grid.Column="0" Background="CornflowerBlue" Margin="2,2,2,2" MouseDown="Celda_Click" Grid.ColumnSpan="2">
                 <TextBlock Text="c" FontSize="80" FontFamily="Webdings" 
                         HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -39,7 +39,6 @@
                         HorizontalAlignment="Center" VerticalAlignment="Center" />
             </DockPanel>
 
-            <!-- Segunda fila -->
             <DockPanel Grid.Row="1" Grid.Column="0" Background="CornflowerBlue" Margin="2,2,2,2" Grid.ColumnSpan="2"  MouseDown="Celda_Click"  IsHitTestVisible="True"> 
                 <TextBlock  Text="c"  FontSize="80" FontFamily="Webdings" 
                         HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -57,7 +56,6 @@
                         HorizontalAlignment="Center" VerticalAlignment="Center" />
             </DockPanel>
 
-            <!-- Tercera fila -->
             <DockPanel Grid.Row="2" Grid.Column="0" Background="CornflowerBlue" Margin="2,2,2,2"  MouseDown="Celda_Click" Grid.ColumnSpan="2">
                 <TextBlock  Text="c"  FontSize="80" FontFamily="Webdings" 
                         HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -75,7 +73,6 @@
                         HorizontalAlignment="Center" VerticalAlignment="Center" />
             </DockPanel>
 
-            <!-- Cuarta fila -->
             <DockPanel Grid.Row="3" Grid.Column="0" Background="CornflowerBlue" Margin="2,2,2,2" Grid.ColumnSpan="2"  MouseDown="Celda_Click">
                 <TextBlock Text="c"  FontSize="80" FontFamily="Webdings" 
                         HorizontalAlignment="Center" VerticalAlignment="Center" />
