@@ -34,7 +34,7 @@ namespace JuegosCartas
         public MainWindow()
         {
             InitializeComponent();
-            timer.Interval = System.TimeSpan.FromMilliseconds(200);
+            timer.Interval = System.TimeSpan.FromMilliseconds(750);
             timer.Tick += timer_Tick;
             
             AssignIconsToSquares(); 
@@ -75,7 +75,12 @@ namespace JuegosCartas
         }
         private void Celda_Click(object sender, MouseButtonEventArgs e)
         {
-            
+            // The timer is only on after two non-matching 
+            // icons have been shown to the player, 
+            // so ignore any clicks if the timer is running
+            if (timer.IsEnabled == true)
+                return;
+
             DockPanel clickedLabel = sender as DockPanel;
 
             if (clickedLabel != null)
@@ -84,7 +89,9 @@ namespace JuegosCartas
 
                 if(iconTextBlock != null)
                 {
-                  
+                    if(iconTextBlock.Foreground == Brushes.Black)
+                        return;
+
                     if (firstClicked == null) //volterar y guardar
                     {
                         firstClicked = iconTextBlock;
@@ -92,15 +99,51 @@ namespace JuegosCartas
                         firstClicked.Foreground = Brushes.Black;
                         return;
                     }
-                    if (secondClicked == null && iconTextBlock != firstClicked) //y que no sea el primero
+                    // If the player gets this far, the timer isn't
+                    // running and firstClicked isn't null,
+                    // so this must be the second icon the player clicked
+                    // Set its color to black
+                    secondClicked = iconTextBlock;
+                    secondClicked.Foreground = Brushes.Black;
+
+                    // Check to see if the player won
+                    CheckForWinner();
+
+                    // If the player clicked two matching icons, keep them 
+                    // black and reset firstClicked and secondClicked 
+                    // so the player can click another icon
+                    if (firstClicked.Text == secondClicked.Text)
                     {
-                        secondClicked = iconTextBlock;
-                        secondClicked.Foreground = Brushes.Black;
-                        timer.Start();
+                        firstClicked = null;
+                        secondClicked = null;
+                        return;
                     }
+                    timer.Start();
+                    
                 }
                
             }
+        }
+        private void CheckForWinner()
+        {
+            // Go through all of the labels in the TableLayoutPanel, 
+            // checking each one to see if its icon is matched
+            foreach (DockPanel dockPanel in LayoutPrincipal.Children)
+            {
+                TextBlock textBlock = dockPanel.Children[0] as TextBlock;
+
+                if (textBlock != null)
+                {
+                    if (textBlock.Foreground == textBlock.Background)
+                        return;
+                }
+            }
+
+            // If the loop didn’t return, it didn't find
+            // any unmatched icons
+            // That means the user won. Show a message and close the form
+            MessageBox.Show("You matched all the icons!", "Congratulations");
+            Close();
         }
     }
 }
